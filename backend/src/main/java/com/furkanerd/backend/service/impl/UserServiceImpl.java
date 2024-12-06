@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         if(user.getId() == null){
-            if(user.getIdentityNo() == null && user.getIdentityNo().length() != 11){
+            if(user.getIdentityNo() == null || user.getIdentityNo().length() != 11){
                 throw new GeneralException("Invalid Indentity-No");
             }
             if(userRepository.existsByIdentityNo(user.getIdentityNo())){
