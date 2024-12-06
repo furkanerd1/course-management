@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/potential-students")
-    public ResponseEntity<List<User>> getPotentia(@RequestBody List<Integer> idList){
+    public ResponseEntity<List<User>> getPotential(@RequestBody List<Integer> idList){
         return  ResponseEntity.ok(userService.getPotentialUsers(idList));
     }
 
