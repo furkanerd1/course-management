@@ -1,5 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import Input from '../components/Input';
+import Select from '../components/Select';
+
 
 function User() {
 
@@ -8,11 +11,20 @@ function User() {
   const[getAllUsers,setAllUsers] = useState([]);
   const[getCurrentPage,setCurrentPage]=useState("1");
   const[getPageItems,setPageItems] = useState([]);
+  const[getErrorMessage,setErrorMessage] = useState(null);
+  const[getSelectedUser,setSelectedUser]=useState(
+    {
+      identityNo: '',
+      name: '',
+      surName: '',
+      gender: '',
+      role:''
+    }
+  )
 
   useEffect(() => {
       loadData();
-
-  },getCurrentPage)
+  },[getCurrentPage])
 
   const loadData= async() => {
     const getData = await axios.get(`${BASE_URL_USER}?page=${getCurrentPage-1}`)
@@ -31,8 +43,55 @@ function User() {
       }
         setPageItems(items);
   }
+
+  const saveUser= async() => {
+    const response = axios.post(BASE_URL_USER,getSelectedUser, {
+      headers:{'Content-Type': 'application/json'},
+      mode:'cors',
+    }).then((response) => {
+      const result = response.data;// auto parse
+      if (result.errorMessage) {
+        setErrorMessage(result.errorMessage);
+        } else {
+             loadUsers();
+              clearForm();
+              setErrorMessage(null);
+            }         
+    })
+
   
-  console.log(getAllUsers)
+      
+     
+  }
+
+  //event funcs
+  const handleInputChange = (e) => {
+    const {name,value} = e.target
+    console.log(e.target)
+    setSelectedUser((prev) => ({...prev,[name]:value})); // { identityNo : value }
+  }
+
+
+  // Clear funcs
+  const clearForm = () => {
+    setSelectedUser( {
+      identityNo: '',
+      name: '',
+      surname: '',
+      gender: '',
+      role: ''
+    });
+  }
+
+  const isClear = () => {
+    return (
+      getSelectedUser.identityNo =='' || getSelectedUser.name =='' || getSelectedUser.surname =='' || getSelectedUser.gender =='' || getSelectedUser.gender ==''
+    );
+  }
+  
+
+  //console.log(getAllUsers)
+
 
   return (
      <div className='container'>
@@ -51,7 +110,7 @@ function User() {
                <tbody>
                       {
                         getAllUsers.map((data,index) => (
-                          <tr  key={index}>
+                          <tr  key={index} onClick={() => {setSelectedUser(data)}} >
                                 <th scope="row">{data.identityNo}</th>
                                 <th>{data.name}</th>
                                 <th>{data.surName}</th>
@@ -69,11 +128,33 @@ function User() {
                </nav>
         </div>
           <div className='col-sm-4 mt-4'>
+            {getErrorMessage}
                 <form>
-                    <div className="mb-3 ">
-                        <label className="form-label fw-bold">Identity No</label>
-                        <input  className="form-control" placeholder='enter the Identity no'/>             
+                    <div className="mb-3">
+                            <Input text={'Identity No :'} name={'identityNo'} type={'text'} placeholder={'enter the Identity No'} maxLength={11} minLength={11} value={getSelectedUser.identityNo} onChange={(e)=> handleInputChange(e)}/>
+                            <Input text={'Name :'} name={'name'} type={'text'} placeholder={'enter the Name'} maxLength={30} minLength={3} value={getSelectedUser.name} onChange={(e)=> handleInputChange(e)} />
+                            <Input text={'Surname :'} name={'surName'} type={'text'} placeholder={'enter the Surname'} maxLength={30} minLength={3} value={getSelectedUser.surName} onChange={(e)=> handleInputChange(e)} />
+                            <Select text={'Gender :'} name={'gender'} value={getSelectedUser.gender} onChange={(e)=> handleInputChange(e)} option1={'MALE'} option2={'FEMALE'}/>
+                            <Select text={'Role :'} name={'role'} value={getSelectedUser.role} onChange={(e)=> handleInputChange(e)} option1={'STUDENT'} option2={'TEACHER'}/>
                     </div>
+                    <button className='btn btn-primary py-1 px-4'  onClick={saveUser}>
+                      {
+                        getSelectedUser.id ? ('Update') : ('Create')
+                      }
+                     </button>
+                      {
+                        isClear() ? (
+                          ('')
+                        ) : (
+                          <>
+                          <button className='btn btn-danger ms-2 py-1 px-4' onClick={()=> {}}> Delete</button>
+                          <button className='btn btn-success ms-2 py-1 px-4' onClick={clearForm}> Clear </button>
+                          </>
+                        )
+                      }
+                    
+
+                 
                 </form>
             </div>
         </div>
