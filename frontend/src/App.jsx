@@ -3,10 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import User from './pages/User'
 import Course from './pages/Course'
 
-
-
 function App() {
-
   return (
     <>
         <Router>
