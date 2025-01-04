@@ -11,8 +11,8 @@ function Layout() {
             <h4 className="pt-0 mt-1 fs-3">Course Management</h4>
         </a>
         <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-6">
-          <li><a href="#" className="nav-link px-3 ms-3 mt-1 text-white">User</a></li>
-          <li><a href="#" className="nav-link px-3 mt-1 text-white">Course</a></li>
+          <li><a href="/" className="nav-link px-3 ms-3 mt-1 text-white">User</a></li>
+          <li><a href="/courses" className="nav-link px-3 mt-1 text-white">Course</a></li>
         </ul>
       </div>
     </div>
